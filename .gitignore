@@ -1,0 +1,15 @@
+blogApp/node_modules/
+blogApp/core/myConfig.js
+blogApp/.env
+blogApp/blogApp.zip
+shopApp/node_modules/
+shopApp/.env
+shopApp/shopApp.zip
+BlogAppBack/node_modules/
+BlogAppBack/.env
+BlogAppBack/BlogAppBack.zip
+blogAppFront/node_modules/
+blogAppFront/blogAppFront.zip
+exampleProject/node_modules/
+exampleProject/public/images/
+exampleProject/.env
