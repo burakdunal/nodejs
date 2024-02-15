@@ -1,0 +1,6 @@
+{
+    "name": "BlogApp",
+    "appArgs": {
+        "listenPort": 3000
+    }
+}

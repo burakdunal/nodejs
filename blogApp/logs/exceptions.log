@@ -1,0 +1,5 @@
+{
+  message: "Identifier 'express' has already been declared",
+  level: 'error',
+  timestamp: 'Sep-15-2023 16:58:31'
+}

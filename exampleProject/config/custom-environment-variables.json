@@ -1,0 +1,23 @@
+{
+    "customVars": {
+        "myCustomVar1": "MY_CUST_ENV_VAR"
+    },
+    "db": {
+        "host": "DBHOST",
+        "user": "DBUSER",
+        "pass": "DBPASS",
+        "name": "DBNAME",
+        "port": "DBPORT"
+    },
+    "mailer": {
+        "mailuser": "MAILUSER",
+        "mailpass": "MAILPASS",
+        "mailfrom": "MAILFROM",
+        "mailhost": "MAILHOST"
+    },
+    "sessisecret": "SESSISECRET",
+    "tokensecret": "TOKENSECRET",
+    "appArgs": {
+        "nodeenv": "NODE_ENV"
+    }
+}

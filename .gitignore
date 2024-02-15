@@ -13,3 +13,5 @@ blogAppFront/blogAppFront.zip
 exampleProject/node_modules/
 exampleProject/public/images/
 exampleProject/.env
+blogApp/public/images/
+blogAppFront/public/images/
