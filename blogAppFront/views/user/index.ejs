@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head') %>
+    </head>
+    <body>
+        <%- include('../partials/nav') %>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-9">
+                    <% blogs.forEach(blog => { %>
+                        <%- include('../partials/blog-card', blog) %>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

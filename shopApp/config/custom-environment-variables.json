@@ -1,0 +1,5 @@
+{
+    "customVars": {
+        "myCustomVar1": "MY_CUST_ENV_VAR"
+    }
+}
