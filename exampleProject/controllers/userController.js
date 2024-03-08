@@ -2,13 +2,13 @@ const Category = require("../models/category");
 const Product = require("../models/products");
 
 exports.get_product_detail = async (req, res) => {
-  const prodId = req.params.prodId;
+  const prodId = req.query.prodId;
   try {
     const product = await Product.findOne({
       where: {
         id: prodId,
       },
-      raw: true,
+      // raw: true,
     });
     if (product) {
       return res.send({ title: product.name, product });
@@ -23,6 +23,8 @@ exports.get_product_detail = async (req, res) => {
 
 exports.get_products = async (req, res) => {
   try {
+    const transactionID = req.query.transactionID;
+    console.log(transactionID);
     const products = await Product.findAll({
       include: Category,
       through: "productCategory",
