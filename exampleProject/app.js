@@ -7,7 +7,7 @@ const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 
-
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(cors({
   origin: "http://localhost:3000",
@@ -20,7 +20,6 @@ app.use(cors({
 //Database & Models
 require("./ignition/db")();
 
-app.use(express.urlencoded({extended: true}));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 app.use('/api/user', userRoutes);

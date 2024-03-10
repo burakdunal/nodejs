@@ -6,7 +6,11 @@ const slugField = require("../helper/slugfield");
 
 const dummyData = async () => {
   const users = await User.bulkCreate([
-      {fullname: "Burak Admin", email: "burak@burak.com", password: await bcrypt.hash("193745045", 10)}
+    {
+      fullname: "Burak Admin",
+      email: "burak@burak.com",
+      password: await bcrypt.hash("193745045", 10),
+    },
   ]);
 
   const products = await Product.bulkCreate([
@@ -52,13 +56,40 @@ const dummyData = async () => {
       image: "images/products/1.jpg",
       is_actv: 1,
     },
+    {
+      name: "Hp Victus 16-s0028nt 7.Nesil Ryzen 5 7640HS-RTX3050 6Gb-16Gb-512 Gb-16.1inc-W11",
+      price: 29849.99,
+      descr: "Ürün açıklama yazısı 6",
+      image: "images/products/1.jpg",
+      is_actv: 1,
+    },
   ]);
 
   const categories = await Category.bulkCreate([
-    { name: "IOS", url: slugField("Ürün Kategorisi A") },
-    { name: "Android", url: slugField("Ürün Kategorisi B") },
-    { name: "Bilgisayar", url: slugField("Ürün Kategorisi C") },
-    { name: "Ürün Kategorisi D", url: slugField("Ürün Kategorisi D") }
+    {
+      name: "IOS Telefonlar",
+      descr: "Kategori açıklama yazısı 1",
+      url: slugField("IOS Telefonlar"),
+      image: "images/categories/1.jpg",
+    },
+    {
+      name: "Android Telefonlar",
+      descr: "Kategori açıklama yazısı 2",
+      url: slugField("Android Telefonlar"),
+      image: "images/categories/1.jpg",
+    },
+    {
+      name: "Mac Bilgisayarlar",
+      descr: "Kategori açıklama yazısı 3",
+      url: slugField("Mac Bilgisayarlar"),
+      image: "images/categories/1.jpg",
+    },
+    {
+      name: "Windows Bilgisayarlar",
+      descr: "Kategori açıklama yazısı 4",
+      url: slugField("Windows Bilgisayarlar"),
+      image: "images/categories/1.jpg",
+    },
   ]);
 
   await categories[0].addProduct(products[0]);
@@ -67,6 +98,7 @@ const dummyData = async () => {
   await categories[1].addProduct(products[3]);
   await categories[1].addProduct(products[4]);
   await categories[2].addProduct(products[5]);
+  await categories[3].addProduct(products[6]);
 };
 
 module.exports = dummyData;

@@ -275,18 +275,15 @@ exports.get_categories = async (req, res) => {
 
 exports.post_category_create = async (req, res) => {
   const name = req.body.name;
-  const price = req.body.price;
   const descr = req.body.descr;
-  const is_actv = req.body.is_actv == "true" ? true : false;
-  const categoryId = req.body.categoryId;
   let image = req.file.filename;
 
   try {
     if (name == "") {
-      throw new Error("Başlık boş geçilemez");
+      throw new Error("Kategori ismi boş geçilemez");
     }
-    if (name.length < 5 || name.length > 25) {
-      throw new Error("Başlık 5 ile 25 karakter arası olmalı.");
+    if (name.length < 3 || name.length > 50) {
+      throw new Error("Kategori ismi 3 ile 50 karakter arası olmalı.");
     }
     if (descr !== "") {
       if (descr.length < 20 || descr.length > 200) {
@@ -294,22 +291,16 @@ exports.post_category_create = async (req, res) => {
       }
     }
 
-    image = "images/products/" + image;
-    const addedProduct = await Product.create({
+    const urlName = slugfield(name);
+    image = "images/categories/" + image;
+    await Category.create({
       name,
-      price,
       descr,
+      url: urlName,
       image,
-      is_actv,
     });
 
-    const category = await Category.findByPk(categoryId);
-
-    if (category) {
-      await category.addProduct(addedProduct);
-    }
-
-    res.send({ status: "success", text: "Ürün ekleme başarılı." });
+    res.send({ status: "success", text: "Kategori ekleme başarılı." });
   } catch (err) {
     await removeImg(req.file.filename);
 

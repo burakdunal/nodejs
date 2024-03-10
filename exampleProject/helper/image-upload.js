@@ -4,7 +4,13 @@ const slugField = require("./slugfield");
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './public/images/products/');
+        let fileDestination;
+        if (req.body.isProduct === true) {
+            fileDestination = './public/images/products/';
+        } else {
+            fileDestination = './public/images/categories/';
+        }
+        cb(null, fileDestination);
     },
     filename: function(req, file, cb) {
         const customFileName = slugField(req.body.name);

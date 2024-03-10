@@ -37,3 +37,18 @@ exports.get_products = async (req, res) => {
     res.status(500).send("Veri çekme hatası: " + err.message);
   }
 };
+
+exports.get_categories = async (req, res) => {
+  try {
+    const categories = await Category.findAll({
+      raw: true,
+    });
+    if (categories) {
+      return res.send({ status: "success", categories });
+    }
+    res.status(404).send("Kategoriler bulunamadı.");
+  } catch (err) {
+    console.error("Veri çekme hatası:", err);
+    res.status(500).send("Veri çekme hatası: " + err.message);
+  }
+};

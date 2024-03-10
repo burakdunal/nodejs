@@ -6,9 +6,17 @@ const Category = dbconn.define("category", {
         type: DataTypes.STRING,
         allowNull: false
     },
+    descr: {
+        type:DataTypes.TEXT,
+        allowNull: true
+    },
     url: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 });
 
