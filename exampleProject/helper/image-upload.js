@@ -5,7 +5,7 @@ const slugField = require("./slugfield");
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         let fileDestination;
-        if (req.body.isProduct === true) {
+        if (req.body.isProduct === 'true') {
             fileDestination = './public/images/products/';
         } else {
             fileDestination = './public/images/categories/';

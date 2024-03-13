@@ -1,3 +1,4 @@
+const Sequelize = require("sequelize");
 const Category = require("../models/category");
 const Product = require("../models/products");
 
@@ -40,8 +41,16 @@ exports.get_products = async (req, res) => {
 
 exports.get_categories = async (req, res) => {
   try {
+    // const categories = await Category.findAll({
+    //   // raw: true,
+    // });
     const categories = await Category.findAll({
-      raw: true,
+      include: {
+        model: Product,
+        attributes: [], // Sadece ürün sayısını almak için diğer öznitelikleri sıralamayın
+      },
+      attributes: ['id', 'name', 'createdAt', [Sequelize.fn('COUNT', Sequelize.col('products.id')), 'productCount']], // Ürün sayısını almak için COUNT fonksiyonunu kullanın
+      group: ['category.id'], // Kategoriye göre gruplayın
     });
     if (categories) {
       return res.send({ status: "success", categories });

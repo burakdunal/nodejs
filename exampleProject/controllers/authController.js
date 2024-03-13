@@ -149,9 +149,9 @@ exports.post_login = async (req, res, next) => {
     const authToken = jwt.sign(
       { _id: user.id, auth: "admin" },
       config.get("tokensecret"),
-      { expiresIn: "1h" }
+      { expiresIn: "1m" }
     );
-    const expireDate = new Date(Date.now() + 60 * 60 * 1000);
+    const expireDate = new Date(Date.now() + 1 * 60 * 1000);
     res
       .cookie("authToken", authToken, {
         origin: "http://localhost:3000",
@@ -336,11 +336,40 @@ exports.get_check_auth = async (req, res) => {
     return res.status(200).json({ status: "error", text: 'Token bulunamadı. Yetkilendirme reddedildi.' });
   }
 
-  jwt.verify(token, config.get("tokensecret"), (err) => {
+  jwt.verify(token, config.get("tokensecret"), (err, decodedToken) => {
     if (err) {
       return res.status(200).json({ status: "error", text: 'Geçersiz token. Yetkilendirme reddedildi.' });
     }
-    res.status(200).json({ status: "success", text: 'Oturum devam ediyor' });
+    const newAuthToken = jwt.sign(
+      { _id: decodedToken._id, auth: "admin" },
+      config.get("tokensecret"),
+      { expiresIn: "1m" } // Yeni bir token oluşturun, örneğin 1 saatlik
+    );
+
+    const expireDate = new Date(Date.now() + 1 * 60 * 1000);
+    const userCookie = req.cookies.user;
+    res
+      .cookie("authToken", newAuthToken, {
+        origin: "http://localhost:3000",
+        expires: expireDate,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      })
+      .cookie("checkToken", true, {
+        origin: "http://localhost:3000",
+        expires: expireDate,
+        secure: true,
+        sameSite: "none",
+      })
+      .cookie("user", userCookie, {
+        origin: "http://localhost:3000",
+        expires: expireDate,
+        secure: true,
+        sameSite: "none",
+      })
+      .status(200).json({ status: "success", text: 'Oturum devam ediyor' });
   });
 };
 

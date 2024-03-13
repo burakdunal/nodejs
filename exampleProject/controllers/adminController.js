@@ -201,14 +201,14 @@ exports.post_product_edit = async (req, res) => {
 
 exports.post_product_test = async (req, res) => {
   try {
-    const product = await Product.findOne({
+    const category = await Category.findOne({
       where: {
         id: 1,
       },
-      raw: true,
+      //raw: true,
     });
-    if (product) {
-      return res.send({ status: "success", title: product.name, product });
+    if (category) {
+      return res.send({ status: "success", title: category.name, category });
     }
     res.status(404).send({
       status: "error",
@@ -273,6 +273,29 @@ exports.get_categories = async (req, res) => {
   }
 };
 
+exports.get_category_detail = async (req, res) => {
+  const categoryId = req.params.categoryId;
+  try {
+    const category = await Category.findOne({
+      where: {
+        id: categoryId,
+      },
+      include: Product,
+      through: "productCategory",
+      //raw: true,
+    });
+
+    if (category) {
+      return res.send({ status: "success", category });
+    }
+    res.status(404).send("Kategori bulunamadı.");
+  } catch (err) {
+    // Doğru şekilde `.catch` kullanımı
+    console.error("Veri çekme hatası:", err);
+    res.status(500).send("Veri çekme hatası: " + err.message);
+  }
+};
+
 exports.post_category_create = async (req, res) => {
   const name = req.body.name;
   const descr = req.body.descr;
@@ -313,6 +336,121 @@ exports.post_category_create = async (req, res) => {
   }
 };
 
+exports.get_category_delete = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+    const category = await Category.findOne({
+      where: {
+        id: categoryId,
+      },
+      include: Product,
+      through: "productCategory",
+      //raw: true,
+    });
+
+    if (!category) {
+      return res.status(404).send({ status: "error", text: 'Kategori bulunamadı' });
+    };
+
+    if (category.products.length > 0) {
+      return res.status(200).send({ status: "warning" });
+    } else {
+      return res.status(200).send({ status: "proceed" });
+    };
+  } catch (err) {
+    // Doğru şekilde `.catch` kullanımı
+    console.error("Veri çekme hatası:", err);
+    res.status(500).send({
+      status: "error",
+      text: err.message,
+      class: "danger",
+    });
+  }
+}
+
+exports.post_category_delete = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+    const childs = req.body.childs; //true or false
+    const category = await Category.findOne({
+      where: {
+        id: categoryId,
+      },
+      include: Product,
+      through: "productCategory",
+      //raw: true,
+    });
+
+    if (!category) {
+      return res.status(404).send({ status: "error", text: 'Kategori bulunamadı' });
+    }
+    
+    const categoryImg = category.image;
+    if (categoryImg !== "") {
+      const removeImgResult = await removeImg(categoryImg, "removeCategory");
+      if (!removeImgResult) {
+        throw new Error("Kategori görseli sunucudan kaldırılamadığı için kategori silinemedi.");
+      }
+    }
+
+    const products = await category.getProducts();
+    if (childs) {
+      if (products.length > 0) {
+        await products.map(async (product) => {
+          if (product.image !== "" && product.image !== null) {
+            const removeImgResult = await removeImg(product.image, "removeProduct");
+            if (!removeImgResult) {
+              throw new Error("Ürün görseli sunucudan kaldırılamadığı için kategori silinemedi.");
+            }
+          }
+        });
+
+        const productIds = products.map(product => product.id);
+        await Product.destroy({
+          where: {
+            id: productIds
+          }
+        });
+        
+        // await category.removeProducts(products);
+        await category.destroy();
+        return res.status(200).send({ status: "success", text: 'Kategori ve altındaki ürünler silinmiştir.' });
+      } else {
+        throw new Error("Kategoriye ait ürün bilgileri veritabanında bulunamadı İşlem başarısız.");
+      }
+    } else {
+      await category.destroy();
+      let resText;
+      if (products.length > 0) {
+        resText = 'Yalnızca kategori silinmiş, altındaki ürünler bırakılmıştır.';
+      } else {
+        resText = 'Kategori silinmiştir.';
+      }
+      return res.status(200).send({ status: "success", text: resText });
+    }
+    // const prodImg = product.image;
+
+    // if (prodImg !== "") {
+    //   const removeImgResult = await removeImg(prodImg, "removeProduct");
+    //   if (!removeImgResult) {
+    //     throw new Error("Ürün görseli sunucudan kaldırılamadığı için ürün silinemedi.");
+    //   }
+    // }
+
+    // await product.destroy();
+    // return res.status(200).send({ status: "success", text: 'Ürün başarıyla silindi' });
+
+  } catch (error) {
+    if (error instanceof Error) {
+      let hataMesaji = error.message;
+      res.status(500).send({ status: "error", text: hataMesaji });
+    } else {
+      console.log("else'e girdi.");
+      res.status(500).send({ status: "error", text: error });
+    }
+  }
+}
+
 // const removeImg = async (filename, oper) => {
 //   let path;
 //   if (oper === "removeProduct") {
@@ -330,7 +468,7 @@ exports.post_category_create = async (req, res) => {
 
 const removeImg = async (filename, oper) => {
   let path;
-  if (oper === "removeProduct") {
+  if (oper === "removeProduct" || oper === "removeCategory") {
     path = "./public/" + filename;
   } else {
     path = "./public/images/products/" + filename;
