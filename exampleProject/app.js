@@ -6,12 +6,13 @@ const path = require("path");
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
+const config = require("config");;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000","http://localhost:3001"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: 'Content-Type,Authorization,x-auth-token',
   exposedHeaders: 'x-auth-token',
@@ -27,6 +28,6 @@ app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use("/api/account",authRoutes);
 
-app.listen(3500, () => {
-  console.log("Listening port on 3500");
+app.listen(config.get("appArgs.port"), () => {
+  console.log("Listening port on " + config.get("appArgs.port"));
 })

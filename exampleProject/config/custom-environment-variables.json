@@ -18,6 +18,7 @@
     "sessisecret": "SESSISECRET",
     "tokensecret": "TOKENSECRET",
     "appArgs": {
-        "nodeenv": "NODE_ENV"
+        "nodeenv": "NODE_ENV",
+        "port": "APPPORT"
     }
 }

@@ -149,9 +149,9 @@ exports.post_login = async (req, res, next) => {
     const authToken = jwt.sign(
       { _id: user.id, auth: "admin" },
       config.get("tokensecret"),
-      { expiresIn: "1m" }
+      { expiresIn: "30m" }
     );
-    const expireDate = new Date(Date.now() + 1 * 60 * 1000);
+    const expireDate = new Date(Date.now() + 30 * 60 * 1000);
     res
       .cookie("authToken", authToken, {
         origin: "http://localhost:3000",
@@ -343,10 +343,10 @@ exports.get_check_auth = async (req, res) => {
     const newAuthToken = jwt.sign(
       { _id: decodedToken._id, auth: "admin" },
       config.get("tokensecret"),
-      { expiresIn: "1m" } // Yeni bir token oluşturun, örneğin 1 saatlik
+      { expiresIn: "30m" } // Yeni bir token oluşturun, örneğin 1 saatlik
     );
 
-    const expireDate = new Date(Date.now() + 1 * 60 * 1000);
+    const expireDate = new Date(Date.now() + 30 * 60 * 1000);
     const userCookie = req.cookies.user;
     res
       .cookie("authToken", newAuthToken, {
