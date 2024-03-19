@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(cors({
-  origin: ["http://localhost:3000","http://localhost:3001"],
+  origin: "*", //["http://localhost:3000","http://localhost:3001"]
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: 'Content-Type,Authorization,x-auth-token',
   exposedHeaders: 'x-auth-token',
@@ -23,6 +23,8 @@ app.use(cors({
 require("./ignition/db")();
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
+
+app.get("/", (req, res) => { res.send("Express on Vercel"); });
 
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
