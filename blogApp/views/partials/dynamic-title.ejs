@@ -1,0 +1,9 @@
+<% if (selectedCategory) { %>
+    <% const result = categories.find(({ url }) => url === selectedCategory); 
+       const catName = result.name;
+    %>
+    <h1 class="h3 mb-3"><%= catName %> Kategorisindeki Bloglar</h1>
+
+<% } else { %>
+    <h1 class="h3 mb-3"><%=title %></h1>
+<% } %>

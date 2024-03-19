@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btnGetProducts">Ürünleri Getir</button>
+    <button id="btnPostProduct">Ürün Ekle</button><input type="text" id="name" placeholder="name"><input type="text" id="price" placeholder="price">
+    <script>
+        const btnGetProducts = document.getElementById("btnGetProducts");
+        const btnPostProduct = document.getElementById("btnPostProduct");
+        btnGetProducts.addEventListener("click", async() => {
+            const res = await fetch("http://localhost:3000/api/products");
+            const urunler = await res.json();
+            console.log(urunler);
+        });
+        btnPostProduct.addEventListener("click", async() => {
+            const name = document.getElementById("name").value;
+            const price = document.getElementById("price").value;
+            const res = await fetch("http://localhost:3000/api/products", {
+            method: 'POST',
+            headers: {
+            'Accept': '/',
+            'Content-Type': 'application/json'
+            },
+            body: `{
+                "name": "${name}",
+                "price": ${price}
+            }`,
+            });
+
+            await res.json().then(data => {
+            console.log(JSON.stringify(data));
+            });
+
+        });
+    </script>
+</body>
+</html>

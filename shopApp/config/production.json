@@ -1,0 +1,6 @@
+{
+    "name": "ShopApi - Prod",
+    "appArgs": {
+        "listenPort": 4500
+    }
+}

@@ -1,0 +1,23 @@
+<% if (totalPages > 1) { %>
+    <% let category = ""; %>
+    <% let categoryPages = ""; %>
+    <% if (typeof selectedCategory != "undefined") { %>
+        <% category = "/category/" + selectedCategory; %>
+        <% categoryPages = "category/" + selectedCategory + "/"; %>
+    <% } %>
+    <nav class="mt-5">
+        <ul class="pagination justify-content-start">
+            <li class="page-item">
+                <a href="/blogs<%= category %>" class="page-link">İlk Sayfa</a>
+            </li>
+            <% for( let i = 0; i < totalPages; i++ ) { %>
+                <li class="page-item">
+                    <a href="/blogs/<%= categoryPages %>pages/<%= i + 1 %>" class="page-link <%= (i == currentPage) ? "active":"" %>"><%= i + 1 %></a>
+                </li>
+            <% } %>
+            <li class="page-item">
+                <a href="/blogs/<%= categoryPages %>pages/<%= totalPages %>" class="page-link">Son Sayfa</a>
+            </li>
+        </ul>
+    </nav>
+<% } %>

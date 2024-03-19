@@ -1,0 +1,6 @@
+{
+    "name": "BlogAppBack",
+    "appArgs": {
+        "listenPort": 3000
+    }
+}

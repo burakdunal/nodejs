@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head') %>
+    </head>
+    <body>
+        <%- include('../partials/nav') %>
+        <div class="container mt-3">
+            <div class="row mx-5">
+                <div class="col-md-6 mt-3 m-auto">
+                    <% if (action != "undefined" && action == "edit") { %>
+                        <div class="alert alert-success"><%= categoryId %> Nolu Kategori Güncellendi.</div>
+                    <% } else if (action != "undefined" && action == "create") { %>
+                        <div class="alert alert-success">Kategori Eklendi.</div>
+                    <% } else if (action != "undefined" && action == "delete") { %>
+                        <div class="alert alert-success">Kategori Silindi!</div>
+                    <% } %>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">id</th>
+                                <th style="width: 200px;">İsim</th>
+                                <th style="width: 50px;">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% categories.forEach(category => { %>
+                                <tr>
+                                    <td>#<%= category.id %></td>
+                                    <td><%= category.name %></td>
+                                    <td>
+                                        <a class="btn btn-sm btn-primary" href="/admin/categories/<%= category.id %>">edit</a>
+                                        <a class="btn btn-sm btn-danger" href="/admin/category/delete/<%= category.id %>">delete</a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
