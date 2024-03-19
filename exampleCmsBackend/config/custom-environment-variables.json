@@ -1,7 +1,4 @@
 {
-    "customVars": {
-        "myCustomVar1": "MY_CUST_ENV_VAR"
-    },
     "db": {
         "host": "DBHOST",
         "user": "DBUSER",

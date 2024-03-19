@@ -1,3 +1,22 @@
 {
-    "name": "BlogAppBack - Dev"
+    "name": "BlogAppBack - Dev",
+    "db": {
+        "host": "DBHOST",
+        "user": "DBUSER",
+        "pass": "DBPASS",
+        "name": "DBNAME",
+        "port": "DBPORT"
+    },
+    "mailer": {
+        "mailuser": "MAILUSER",
+        "mailpass": "MAILPASS",
+        "mailfrom": "MAILFROM",
+        "mailhost": "MAILHOST"
+    },
+    "sessisecret": "SESSISECRET",
+    "tokensecret": "TOKENSECRET",
+    "appArgs": {
+        "nodeenv": "NODE_ENV",
+        "port": "APPPORT"
+    }
 }
