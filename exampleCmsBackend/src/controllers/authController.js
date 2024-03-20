@@ -154,7 +154,7 @@ exports.post_login = async (req, res, next) => {
     const expireDate = new Date(Date.now() + 30 * 60 * 1000);
     res
       .cookie("authToken", authToken, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
         expires: expireDate,
         httpOnly: true,
         secure: true,
@@ -162,19 +162,22 @@ exports.post_login = async (req, res, next) => {
         path: "/",
       })
       .cookie("checkToken", true, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "none",
+        path: "/",
       })
       .cookie("user", user.fullname, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "none",
+        path: "/",
       })
       .send({ status: "success", name: user.fullname });
   } catch (err) {
+    res.
     next(err);
   }
 };
@@ -192,14 +195,6 @@ exports.get_logout = (req, res, next) => {
 
     // const expireDateOnLogout = new Date(Date.now());
     res
-      // .clearCookie('authToken', { 
-      //   origin: "http://localhost:3000",
-      //   expires: expireDateOnLogout,
-      //   httpOnly: true,
-      //   secure: true,
-      //   sameSite: "none",
-      //   path: "/", 
-      // })
       .clearCookie('authToken', {httpOnly: true})
       .send({ status: "success" });
   } catch (err) {
@@ -350,7 +345,7 @@ exports.get_check_auth = async (req, res) => {
     const userCookie = req.cookies.user;
     res
       .cookie("authToken", newAuthToken, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
         expires: expireDate,
         httpOnly: true,
         secure: true,
@@ -358,16 +353,18 @@ exports.get_check_auth = async (req, res) => {
         path: "/",
       })
       .cookie("checkToken", true, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "none",
+        path: "/",
       })
       .cookie("user", userCookie, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "none",
+        path: "/",
       })
       .status(200).json({ status: "success", text: 'Oturum devam ediyor' });
   });
