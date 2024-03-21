@@ -11,7 +11,7 @@ BlogAppBack/BlogAppBack.zip
 blogAppFront/node_modules/
 blogAppFront/blogAppFront.zip
 exampleCmsBackend/node_modules/
-exampleCmsBackend/public/images/
+exampleCmsBackend/src/public/images/
 exampleCmsBackend/.env
 blogApp/public/images/
 blogAppFront/public/images/

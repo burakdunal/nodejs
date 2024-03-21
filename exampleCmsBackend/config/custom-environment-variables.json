@@ -1,7 +1,4 @@
 {
-    "customVars": {
-        "myCustomVar1": "MY_CUST_ENV_VAR"
-    },
     "db": {
         "host": "DBHOST",
         "user": "DBUSER",
@@ -19,6 +16,10 @@
     "tokensecret": "TOKENSECRET",
     "appArgs": {
         "nodeenv": "NODE_ENV",
-        "port": "APPPORT"
+        "port": "APPPORT",
+        "domain": "https://us-central1-examplecmsbackend.cloudfunctions.net/api/"
+    },
+    "frontAppArgs": {
+        "domain": "https://reactjs-nine-vert.vercel.app"
     }
 }

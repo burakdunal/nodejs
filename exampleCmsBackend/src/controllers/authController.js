@@ -153,28 +153,35 @@ exports.post_login = async (req, res, next) => {
     );
     const expireDate = new Date(Date.now() + 30 * 60 * 1000);
     res
-      .cookie("authToken", authToken, {
-        origin: "http://localhost:3000",
+      .cookie("__session", authToken, {
+        origin: "https://example-cms.inadayapp.com",
+        domain: "https://example-cms.inadayapp.com",
         expires: expireDate,
         httpOnly: true,
         secure: true,
-        sameSite: "none",
+        sameSite: "strict",
         path: "/",
       })
       .cookie("checkToken", true, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
+        domain: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
-        sameSite: "none",
+        sameSite: "strict",
+        path: "/",
       })
       .cookie("user", user.fullname, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
+        domain: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
-        sameSite: "none",
+        sameSite: "strict",
+        path: "/",
       })
+      .setHeader('Cache-Control', 'private')
       .send({ status: "success", name: user.fullname });
   } catch (err) {
+    res.
     next(err);
   }
 };
@@ -192,15 +199,7 @@ exports.get_logout = (req, res, next) => {
 
     // const expireDateOnLogout = new Date(Date.now());
     res
-      // .clearCookie('authToken', { 
-      //   origin: "http://localhost:3000",
-      //   expires: expireDateOnLogout,
-      //   httpOnly: true,
-      //   secure: true,
-      //   sameSite: "none",
-      //   path: "/", 
-      // })
-      .clearCookie('authToken', {httpOnly: true})
+      .clearCookie('__session', {httpOnly: true})
       .send({ status: "success" });
   } catch (err) {
     res.send({ status: "error", text: err });
@@ -330,7 +329,7 @@ exports.post_new_pass = async (req, resp, next) => {
 };
 
 exports.get_check_auth = async (req, res) => {
-  const token = req.cookies.authToken;
+  const token = req.cookies.__session;
   console.log("checkAuth");
   if (!token) {
     return res.status(200).json({ status: "error", text: 'Token bulunamadı. Yetkilendirme reddedildi.' });
@@ -349,26 +348,31 @@ exports.get_check_auth = async (req, res) => {
     const expireDate = new Date(Date.now() + 30 * 60 * 1000);
     const userCookie = req.cookies.user;
     res
-      .cookie("authToken", newAuthToken, {
-        origin: "http://localhost:3000",
+      .cookie("__session", newAuthToken, {
+        origin: "https://example-cms.inadayapp.com",
+        domain: "https://example-cms.inadayapp.com",
         expires: expireDate,
         httpOnly: true,
         secure: true,
-        sameSite: "none",
+        sameSite: "strict",
         path: "/",
       })
       .cookie("checkToken", true, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
+        domain: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
-        sameSite: "none",
+        sameSite: "strict",
       })
       .cookie("user", userCookie, {
-        origin: "http://localhost:3000",
+        origin: "https://example-cms.inadayapp.com",
+        domain: "https://example-cms.inadayapp.com",
         expires: expireDate,
         secure: true,
-        sameSite: "none",
+        sameSite: "strict",
+        path: "/",
       })
+      .setHeader('Cache-Control', 'private')
       .status(200).json({ status: "success", text: 'Oturum devam ediyor' });
   });
 };
