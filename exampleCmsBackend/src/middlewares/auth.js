@@ -4,7 +4,7 @@ const config = require("config");
 // Kullanıcı doğrulama middleware'ı
 const isAuth = (req, res, next) => {
 
-  const token = req.cookies.authToken;
+  const token = req.cookies.__session;
 
   if (!token) {
     return res.status(401).json({ status: "error", text: 'Token bulunamadı. Yetkilendirme reddedildi.' });
