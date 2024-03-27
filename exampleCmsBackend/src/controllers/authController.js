@@ -149,40 +149,35 @@ exports.post_login = async (req, res, next) => {
     const authToken = jwt.sign(
       { _id: user.id, auth: "admin" },
       config.get("tokensecret"),
-      { expiresIn: "30m" }
+      { expiresIn: "10m" }
     );
-    const expireDate = new Date(Date.now() + 30 * 60 * 1000);
+    const expireDate = new Date(Date.now() + 10 * 60 * 1000);
     res
       .cookie("__session", authToken, {
         origin: "https://example-cms.inadayapp.com",
-        domain: "https://example-cms.inadayapp.com",
+        domain: "inadayapp.com",
         expires: expireDate,
         httpOnly: true,
         secure: true,
         sameSite: "strict",
-        path: "/",
       })
       .cookie("checkToken", true, {
         origin: "https://example-cms.inadayapp.com",
-        domain: "https://example-cms.inadayapp.com",
+        domain: "inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "strict",
-        path: "/",
       })
       .cookie("user", user.fullname, {
         origin: "https://example-cms.inadayapp.com",
-        domain: "https://example-cms.inadayapp.com",
+        domain: "inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "strict",
-        path: "/",
       })
-      .setHeader('Cache-Control', 'private')
       .send({ status: "success", name: user.fullname });
   } catch (err) {
-    res.
-    next(err);
+    res.next(err);
   }
 };
 
@@ -199,7 +194,13 @@ exports.get_logout = (req, res, next) => {
 
     // const expireDateOnLogout = new Date(Date.now());
     res
-      .clearCookie('__session', {httpOnly: true})
+      .clearCookie("__session", {
+        origin: "https://example-cms.inadayapp.com",
+        domain: "inadayapp.com",
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+      })
       .send({ status: "success" });
   } catch (err) {
     res.send({ status: "error", text: err });
@@ -332,48 +333,56 @@ exports.get_check_auth = async (req, res) => {
   const token = req.cookies.__session;
   console.log("checkAuth");
   if (!token) {
-    return res.status(200).json({ status: "error", text: 'Token bulunamadı. Yetkilendirme reddedildi.' });
+    return res
+      .status(200)
+      .json({
+        status: "error",
+        text: "Token bulunamadı. Yetkilendirme reddedildi.",
+      });
   }
 
   jwt.verify(token, config.get("tokensecret"), (err, decodedToken) => {
     if (err) {
-      return res.status(200).json({ status: "error", text: 'Geçersiz token. Yetkilendirme reddedildi.' });
+      return res
+        .status(200)
+        .json({
+          status: "error",
+          text: "Geçersiz token. Yetkilendirme reddedildi.",
+        });
     }
     const newAuthToken = jwt.sign(
       { _id: decodedToken._id, auth: "admin" },
       config.get("tokensecret"),
-      { expiresIn: "30m" } // Yeni bir token oluşturun, örneğin 1 saatlik
+      { expiresIn: "10m" } // Yeni bir token oluşturun, örneğin 1 saatlik
     );
 
-    const expireDate = new Date(Date.now() + 30 * 60 * 1000);
+    const expireDate = new Date(Date.now() + 10 * 60 * 1000);
     const userCookie = req.cookies.user;
     res
       .cookie("__session", newAuthToken, {
         origin: "https://example-cms.inadayapp.com",
-        domain: "https://example-cms.inadayapp.com",
+        domain: "inadayapp.com",
         expires: expireDate,
         httpOnly: true,
         secure: true,
         sameSite: "strict",
-        path: "/",
       })
       .cookie("checkToken", true, {
         origin: "https://example-cms.inadayapp.com",
-        domain: "https://example-cms.inadayapp.com",
+        domain: "inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "strict",
       })
       .cookie("user", userCookie, {
         origin: "https://example-cms.inadayapp.com",
-        domain: "https://example-cms.inadayapp.com",
+        domain: "inadayapp.com",
         expires: expireDate,
         secure: true,
         sameSite: "strict",
-        path: "/",
       })
-      .setHeader('Cache-Control', 'private')
-      .status(200).json({ status: "success", text: 'Oturum devam ediyor' });
+      .status(200)
+      .json({ status: "success", text: "Oturum devam ediyor" });
   });
 };
 

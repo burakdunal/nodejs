@@ -6,9 +6,9 @@ const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         let fileDestination;
         if (req.body.isProduct === 'true') {
-            fileDestination = './public/images/products/';
+            fileDestination = path.join(__dirname, '../public/images/products/');
         } else {
-            fileDestination = './public/images/categories/';
+            fileDestination = path.join(__dirname,'../public/images/categories/');
         }
         cb(null, fileDestination);
     },

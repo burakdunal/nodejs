@@ -1,5 +1,6 @@
 const config = require("config");
 const fs = require("fs");
+const path = require("path");
 const Product = require("../models/products");
 const Category = require("../models/category");
 const slugfield = require("../helper/slugfield");
@@ -81,7 +82,7 @@ exports.post_product_create = async (req, res) => {
 
       res.send({ status: "success", text: "Ürün ekleme başarılı." });
     } catch (err) {
-      await removeImg(req.file.filename);
+      await removeImg(req.file.filename, "addProduct");
 
       let hataMesaji = "";
       if (err instanceof Error) {
@@ -91,7 +92,7 @@ exports.post_product_create = async (req, res) => {
       console.log("Başarısız: " + hataMesaji);
     }
   } catch (error) {
-    await removeImg(req.file.filename);
+    await removeImg(req.file.filename, "addProduct");
     
     let hataMesaji = "";
     if (error instanceof Error) {
@@ -188,7 +189,7 @@ exports.post_product_edit = async (req, res) => {
     }
   } catch (error) {
     if (imageExists && prevImgDelStatus) {
-      await removeImg(req.file.filename);
+      await removeImg(req.file.filename, "addProduct");
     }
     let hataMesaji = "";
     if (error instanceof Error) {
@@ -325,7 +326,7 @@ exports.post_category_create = async (req, res) => {
 
     res.send({ status: "success", text: "Kategori ekleme başarılı." });
   } catch (err) {
-    await removeImg(req.file.filename);
+    await removeImg(req.file.filename, "addCategory");
 
     let hataMesaji = "";
     if (err instanceof Error) {
@@ -467,15 +468,16 @@ exports.post_category_delete = async (req, res) => {
 // };
 
 const removeImg = async (filename, oper) => {
-  let path;
   if (oper === "removeProduct" || oper === "removeCategory") {
-    path = "./public/" + filename;
-  } else {
-    path = "./public/images/products/" + filename;
+    filePath = path.join(__dirname,'../public/') + filename;
+  } else if (oper === "addProduct") {
+    filePath = path.join(__dirname,'../public/images/products/')  + filename;
+  } else if (oper === "addCategory") {
+    filePath = path.join(__dirname,'../public/images/categories/')  + filename;
   }
 
   return new Promise((resolve, reject) => {
-    fs.unlink(path, (err) => {
+    fs.unlink(filePath, (err) => {
       if (err) {
         resolve(false);
       } else {
