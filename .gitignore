@@ -13,5 +13,16 @@ blogAppFront/blogAppFront.zip
 exampleCmsBackend/node_modules/
 exampleCmsBackend/src/public/images/
 exampleCmsBackend/.env
+exampleProject/node_modules/
+exampleProject/public/
+exampleProject/.env
 blogApp/public/images/
 blogAppFront/public/images/
+personalPortfolioPanel/
+personalPortfolioPanel/node_modules/
+personalPortfolioPanel/src/public
+personalPortfolioPanel/.env
+personalPortfolioPanel/.adminjs/
+personalPortfolioBackend/node_modules/
+personalPortfolioBackend/src/public
+personalPortfolioBackend/.env
