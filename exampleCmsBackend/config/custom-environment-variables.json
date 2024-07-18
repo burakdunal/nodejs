@@ -16,10 +16,6 @@
     "tokensecret": "TOKENSECRET",
     "appArgs": {
         "nodeenv": "NODE_ENV",
-        "port": "APPPORT",
-        "domain": "https://us-central1-examplecmsbackend.cloudfunctions.net/api/"
-    },
-    "frontAppArgs": {
-        "domain": "https://reactjs-nine-vert.vercel.app"
+        "port": "APPPORT"
     }
 }
