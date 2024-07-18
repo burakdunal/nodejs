@@ -1,10 +1,10 @@
 const { Op } = require("sequelize");
 const config = require("config");
 // const mailTransporter = require("../helper/send-mail");
-const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const { Admin } = require("../data/models/models");
 
 exports.get_register = async (req, resp, next) => {
   try {
@@ -23,21 +23,6 @@ exports.post_register = async (req, resp, next) => {
   const email = req.body.email;
   const password = req.body.password;
   try {
-    // const user = await User.findOne({ where: { email: email}});
-    // if(user){
-    //     req.session.message = { text: "Girdiğiniz e-posta adresi ile daha önce kayıt olunmuş.", class:"warning"};
-    //     return req.session.save((err) => {
-    //         if (err) {
-    //             console.log("session save error", err);
-    //             resp.sendStatus(500);
-    //         } else {
-    //             const url = req.query.returnUrl || "/";
-    //             resp.redirect("login");
-    //         }
-    //     });
-    // }
-
-    // throw new Error("hata oluştu");
     const newUser = await User.create({
       fullname: name,
       email: email,
@@ -100,15 +85,16 @@ exports.get_login = async (req, resp, next) => {
 };
 
 exports.post_login = async (req, res, next) => {
+  const {frontendEndpoint, mainDomain} = req.endpoints;
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({
+    const admin = await Admin.findOne({
       where: {
         email: email,
       },
     });
 
-    if (!user) {
+    if (!admin) {
       return res.status(401).send({
         status: "error",
         text: "Kullanıcı bulunamadı.",
@@ -116,30 +102,8 @@ exports.post_login = async (req, res, next) => {
       });
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, admin.password);
     if (!match) {
-      // const userRoles = await user.getRoles({
-      //     attributes: ["rolename"],
-      //     raw: true
-      // });
-
-      // req.session.roles = userRoles.map((role) => role["rolename"]);
-      // req.session.isAuth = true;
-      // req.session.fullname = user.fullname;
-      // req.session.userId = user.id;
-
-      // const authToken = createAuthToken(user);
-
-      // return req.session.save((err) => {
-      //     if (err) {
-      //         console.log("session save error", err);
-      //         resp.sendStatus(500);
-      //     } else {
-      //         const url = req.query.returnUrl || "/";
-      //         console.log(authToken);
-      //         resp.header("x-auth-token", authToken).redirect(url);
-      //     }
-      // });
       return res.status(401).send({
         status: "error",
         text: "E-posta veya parola hatalı.",
@@ -147,41 +111,43 @@ exports.post_login = async (req, res, next) => {
       });
     }
     const authToken = jwt.sign(
-      { _id: user.id, auth: "admin" },
+      { _id: admin.id, auth: "admin" },
       config.get("tokensecret"),
       { expiresIn: "10m" }
     );
+
     const expireDate = new Date(Date.now() + 10 * 60 * 1000);
     res
       .cookie("__session", authToken, {
-        origin: "https://example-cms.inadayapp.com",
-        domain: "inadayapp.com",
+        origin: frontendEndpoint,
+        domain: mainDomain,
         expires: expireDate,
         httpOnly: true,
         secure: true,
         sameSite: "strict",
       })
       .cookie("checkToken", true, {
-        origin: "https://example-cms.inadayapp.com",
-        domain: "inadayapp.com",
+        origin: frontendEndpoint,
+        domain: mainDomain,
         expires: expireDate,
         secure: true,
         sameSite: "strict",
       })
-      .cookie("user", user.fullname, {
-        origin: "https://example-cms.inadayapp.com",
-        domain: "inadayapp.com",
+      .cookie("user", admin.firstName, {
+        origin: frontendEndpoint,
+        domain: mainDomain,
         expires: expireDate,
         secure: true,
         sameSite: "strict",
       })
-      .send({ status: "success", name: user.fullname });
+      .send({ status: "success", isAuth: true, name: admin.firstName });
   } catch (err) {
     res.next(err);
   }
 };
 
 exports.get_logout = (req, res, next) => {
+  const {frontendEndpoint, mainDomain} = req.endpoints;
   try {
     // return req.session.destroy((err) => {
     //   if (err) {
@@ -195,8 +161,8 @@ exports.get_logout = (req, res, next) => {
     // const expireDateOnLogout = new Date(Date.now());
     res
       .clearCookie("__session", {
-        origin: "https://example-cms.inadayapp.com",
-        domain: "inadayapp.com",
+        origin: frontendEndpoint,
+        domain: mainDomain,
         httpOnly: true,
         secure: true,
         sameSite: "strict",
@@ -330,6 +296,7 @@ exports.post_new_pass = async (req, resp, next) => {
 };
 
 exports.get_check_auth = async (req, res) => {
+  const {frontendEndpoint, mainDomain} = req.endpoints;
   const token = req.cookies.__session;
   console.log("checkAuth");
   if (!token) {
@@ -360,23 +327,23 @@ exports.get_check_auth = async (req, res) => {
     const userCookie = req.cookies.user;
     res
       .cookie("__session", newAuthToken, {
-        origin: "https://example-cms.inadayapp.com",
-        domain: "inadayapp.com",
+        origin: frontendEndpoint,
+        domain: mainDomain,
         expires: expireDate,
         httpOnly: true,
         secure: true,
         sameSite: "strict",
       })
       .cookie("checkToken", true, {
-        origin: "https://example-cms.inadayapp.com",
-        domain: "inadayapp.com",
+        origin: frontendEndpoint,
+        domain: mainDomain,
         expires: expireDate,
         secure: true,
         sameSite: "strict",
       })
       .cookie("user", userCookie, {
-        origin: "https://example-cms.inadayapp.com",
-        domain: "inadayapp.com",
+        origin: frontendEndpoint,
+        domain: mainDomain,
         expires: expireDate,
         secure: true,
         sameSite: "strict",

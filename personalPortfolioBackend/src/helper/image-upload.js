@@ -5,8 +5,8 @@ const slugField = require("./slugfield");
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         let fileDestination;
-        if (req.body.isProduct === 'true') {
-            fileDestination = path.join(__dirname, '../public/images/products/');
+        if (req.body.isPerson === 'true') {
+            fileDestination = path.join(__dirname, '../public/images/user/');
         } else {
             fileDestination = path.join(__dirname,'../public/images/categories/');
         }
