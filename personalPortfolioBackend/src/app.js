@@ -1,5 +1,6 @@
 const express = require("express");
 const https = require("https");
+const fs = require("fs");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const path = require("path");
@@ -40,10 +41,19 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 
-app.listen(appPort, (error) =>{
-  if(!error)
-      console.log("Server is Successfully Running, and App is listening on port "+ appPort);
-  else 
-      console.log("Error occurred, server can't start", error);
-  }
-);
+const httpsOptions = {
+  key: fs.readFileSync('/etc/nginx/ssl-certificates/api.aslidunal.com.key'),
+  cert: fs.readFileSync('/etc/nginx/ssl-certificates/api.aslidunal.com.crt')
+};
+
+https.createServer(httpsOptions, app).listen(appPort, () => {
+  console.log("Listening port on " + appPort);
+});
+
+// app.listen(appPort, (error) =>{
+//   if(!error)
+//       console.log("Server is Successfully Running, and App is listening on port "+ appPort);
+//   else 
+//       console.log("Error occurred, server can't start", error);
+//   }
+// );
