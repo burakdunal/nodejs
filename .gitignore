@@ -1,4 +1,5 @@
 **/node_modules/
+**/*.env
 blogApp/node_modules/
 blogApp/core/myConfig.js
 blogApp/.env
