@@ -23,7 +23,7 @@ app.post("/todos", async (req, res) => {
     name,
   });
   await todo.save();
-  res.status(201).json({ message: "Goal saved successfully", todo });
+  res.status(201).json({ message: "Goal saved successfully!", todo });
 });
 
 app.put("/todos/:id", async (req, res) => {
@@ -45,7 +45,7 @@ app.delete("/todos/:id", async (req, res) => {
 });
 
 mongoose.connect(
-  "mongodb://mongodb:27017/todos-app",
+  `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongodb:27017/todos-app?authSource=admin`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,

@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    volumes:
+      - mongodb_data:/data/db
+    env_file:
+      - ./env/mongo.env
+  backend:
+    build:
+      context: ./dockerAppBackend
+      dockerfile: Dockerfile
+    container_name: backend
+    volumes:
+      - ./dockerAppBackend/src:/app/src
+      - /app/node_modules
+    ports:
+      - "3500:8000"
+    depends_on:
+      - mongodb
+    env_file:
+      - ./env/backend.env
+  frontend:
+    build:
+      context: ../reactjs/dockerAppFrontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    volumes:
+      - ../reactjs/dockerAppFrontend/src:/app/src
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - FAST_REFRESH=false
+volumes:
+  mongodb_data:
