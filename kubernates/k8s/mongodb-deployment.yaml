@@ -1,0 +1,33 @@
+# mongodb-pod.yaml
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: mongodb
+#   labels:
+#     component: mongodb
+# spec:
+#   containers:
+#     - name: mongodb
+#       image: mongo
+#       ports:
+#         - containerPort: 27017
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: mongodb
+  template:
+    metadata:
+      labels:
+        component: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo
+          ports:
+            - containerPort: 27017
