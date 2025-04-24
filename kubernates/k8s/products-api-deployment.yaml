@@ -28,6 +28,12 @@ spec:
     spec:
       containers:
         - name: products-api
-          image: laithharb/products-api
+          image: laithharb/products-api:v2
           ports:
             - containerPort: 5002
+          env:
+            - name: MONGODB_HOST
+              value: "mongodb-cluster-ip-service"
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-configmap

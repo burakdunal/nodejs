@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifications-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: notifications-api
+  template:
+    metadata:
+      labels:
+        component: notifications-api
+    spec:
+      containers:
+        - name: notifications-api
+          image: laithharb/notifications-api:v2
+          ports:
+            - containerPort: 5001
+          env:
+            - name: TWILIO_ACCOUNT_SID
+              value: "secret-twilio-account-sid"
+            - name: TWILIO_AUTH_TOKEN
+              value: "secret-twilio-auth-token"
+            - name: TWILIO_NUMBER
+              value: "secret-twilio-number"
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-configmap
