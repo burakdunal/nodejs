@@ -19,11 +19,20 @@ spec:
             - containerPort: 5001
           env:
             - name: TWILIO_ACCOUNT_SID
-              value: "secret-twilio-account-sid"
+              valueFrom:
+                secretKeyRef:
+                  name: twilio-secret
+                  key: TWILIO_ACCOUNT_SID
             - name: TWILIO_AUTH_TOKEN
-              value: "secret-twilio-auth-token"
+              valueFrom:
+                secretKeyRef:
+                  name: twilio-secret
+                  key: TWILIO_AUTH_TOKEN
             - name: TWILIO_NUMBER
-              value: "secret-twilio-number"
+              valueFrom:
+                secretKeyRef:
+                  name: twilio-secret
+                  key: TWILIO_NUMBER
           envFrom:
             - configMapRef:
                 name: rabbitmq-configmap
